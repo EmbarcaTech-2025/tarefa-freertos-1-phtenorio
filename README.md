@@ -10,6 +10,30 @@ Instituição: EmbarcaTech - HBr
 Campinas, Junho de 2025
 
 ---
+Respostas para as perguntas do trablalho.
+
+**O que acontece se todas as tarefas tiverem a mesma prioridade?**
+
+Elas rodam em um esquema de rodízio (Round-Robin), também conhecido como Time-Slicing (Fatiamento de Tempo).
+O sistema operacional dá uma pequena "fatia de tempo" para cada tarefa executar.
+Quando o tempo de uma tarefa acaba, o sistema a interrompe e dá a vez para a próxima da fila, garantindo que nenhuma tarefa monopolize o processador.
+
+
+**Qual tarefa consome mais tempo da CPU?**
+
+No código, todas as três tarefas têm um consumo de CPU baixíssimo.
+O consumo de CPU ocorre apenas no trabalho executado entre as chamadas de vTaskDelay.
+Como as tarefas passam a maior parte do tempo "dormindo" no vTaskDelay, o processador fica a maior parte do tempo (>99%) executando a tarefa ociosa (idle task) do FreeRTOS, que é o estado de menor atividade.
+
+
+**Quais seriam os riscos de usar polling sem prioridades?**
+
+Usar "polling" (verificação em loop) com todas as tarefas na mesma prioridade gera três riscos principais:
+Alta Latência: A resposta a um evento (como um botão) se torna lenta e imprevisível, pois a tarefa precisa esperar sua vez no rodízio para verificar o estado. Eventos rápidos podem ser perdidos.
+Desperdício de CPU e Energia: As tarefas estão sempre rodando e consumindo ciclos de processamento apenas para verificar se há algo a fazer, mesmo que na maioria das vezes não haja.
+Falta de Urgência: É impossível garantir que uma tarefa crítica (ler um sensor de emergência) seja executada antes de uma tarefa menos importante (atualizar um display). Todas são tratadas como iguais.
+
+---
 
 **# Projeto Multitarefa com FreeRTOS na Raspberry Pi Pico**
 
