@@ -12,7 +12,7 @@ if (EXISTS ${picoVscode})
     include(${picoVscode})
 endif()
 # ====================================================================================
-set(PICO_BOARD pico CACHE STRING "Board type")
+set(PICO_BOARD pico_w CACHE STRING "Board type")
 
 cmake_minimum_required(VERSION 3.12)
 
@@ -36,8 +36,10 @@ project(embarcatech-freertos-tarefa-1 C CXX ASM)
 pico_sdk_init()
 
 add_executable(embarcatech-freertos-tarefa-1
-    main.c
+    src/main.c
 )
+
+target_compile_definitions(embarcatech-freertos-tarefa-1 PRIVATE PICO_WIFI_NO_POWERSAVE)
 
 target_include_directories(embarcatech-freertos-tarefa-1 PRIVATE
     ${CMAKE_CURRENT_LIST_DIR}
@@ -48,7 +50,12 @@ target_link_libraries(embarcatech-freertos-tarefa-1
     pico_stdlib 
     FreeRTOS-Kernel-Heap4 
     hardware_i2c
+    hardware_pwm
     )
+
+# Modify the below lines to enable/disable output over UART/USB
+pico_enable_stdio_uart(embarcatech-freertos-tarefa-1 0)
+pico_enable_stdio_usb(embarcatech-freertos-tarefa-1 1)
 
 pico_add_extra_outputs(embarcatech-freertos-tarefa-1)
 
